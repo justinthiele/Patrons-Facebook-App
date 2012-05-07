@@ -1,0 +1,23 @@
+<html>
+<body>
+
+<h1>Your Monthly Pledge To <%= @artist.name %> Failed :(</h1>
+
+<h3>It could be that your credit card is expired or no longer valid.</h3>
+
+<p>You can update your credit card from the Patrons app on <%= @artist.name %>'s Facebook Page. Just click the 'Manage Your Pledges' button then you'll see the 'Update Credit Card' link.</p>
+
+<p>
+	Here's your pledge details:<br>
+	<b>Pledge Level:</b> <%= @payment_notification.plan.name %><br>
+	<b>Monthly Pledge:</b> <%= number_to_currency @payment_notification.plan.price %><br>
+</p>
+
+<p>If you ever have questions or need help => hello@patron.us</p>
+
+<p>Cheers,</p>
+
+<p>Justin / <a href="http://patrons.us">Patrons</a></p>
+
+</body>
+</html>

@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+<head>
+	
+<!--
+
+	 ____       _                         _                        __   __          _ 
+	|  _ \ __ _| |_ _ __ ___  _ __  ___  | |    _____   _____ ___  \ \ / /__  _   _| |
+	| |_) / _` | __| '__/ _ \| '_ \/ __| | |   / _ \ \ / / _ \ __|  \ V / _ \| | | | |
+	|  __/ (_| | |_| | | (_) | | | \__ \ | |___ (_) \ V /  __\__ \   | | (_) | |_| |_|
+	|_|   \__,_|\__|_|  \___/|_| |_|___/ |_____\___/ \_/ \___|___/   |_|\___/ \__,_(_)
+
+	xoxo, 
+	-Justin
+
+-->	
+	
+  <title>Patrons</title>
+  <%= stylesheet_link_tag "bootstrap.min.css" %>
+  <%= javascript_include_tag "https://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js", "https://js.stripe.com/v1/", 'rails', 'application', 'subscriptions.js', 'bootstrap-tabs', "bootstrap-twipsy", "bootstrap-popover", 'jquery.tablesorter.min', 'bootstrap-modal' %>
+  <%= csrf_meta_tag %>
+  <%= tag :meta, :name => "stripe-key", :content => STRIPE_PUBLIC_KEY %>
+
+  	<script type="text/javascript">
+		window.fbAsyncInit = function()
+		  {
+			FB.Canvas.setSize();
+		  }
+	</script>
+	
+  <%= yield :head %>
+
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-28932464-1']);
+  _gaq.push(['_setDomainName', 'patrons.us']);
+  _gaq.push(['_setAllowLinker', true]);
+  _gaq.push(['_trackPageview']);
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+</head>
+<body>
+
+    <div id="fb-root"></div>
+    <script>
+      window.fbAsyncInit = function() {
+		FB._https = true;
+        FB.init({
+          appId  : '<%= FB_APP_ID %>',
+          status : true, // check login status
+          cookie : true, // enable cookies to allow the server to access the session          
+          xfbml  : true  // parse XFBML
+        });
+		FB.Canvas.scrollTo(0,0);
+        FB.Canvas.setAutoGrow();
+      };
+
+      (function() {
+        var e = document.createElement('script'); e.async = true;
+        e.src = document.location.protocol + '//connect.facebook.net/en_US/all.js';
+        document.getElementById('fb-root').appendChild(e);
+      }());
+    </script>
+
+<div class="container">
+	
+	<div id="notice-bar">
+	 	<%= content_tag(:p, notice, :class => 'alert-message success') if notice.present? %>
+	   	<%= content_tag(:p, alert, :class => 'alert-message error') if alert.present? %>
+	</div>
+
+
+	<%= yield %>
+	
+	<div id="footer">
+		<div id="powered_by">powered by <%= link_to(image_tag("patrons-logo-small.png"), "http://patrons.us", :target => '_blank') %>
+			
+		  <div id="modal-faq" class="modal hide fade">
+            <div class="modal-header">
+              <a href="#" class="close">&times;</a>
+              <h3>Frequently Asked Questions</h3>
+            </div>
+            <div class="modal-body">
+              	<p>
+				  <strong>Is my purchase and credit card information secure?</strong><br>
+				  Absolutely! All transactions are done over a secure SSL encrypted connection. The same technology that banks use to keep your information safe.	
+				</p>
+				<p>
+				  <strong>How will my pledge appear on my credit card statement?</strong><br>
+				  Your monthly pledge will appear on your credit card statement as 'PATRONS.US'.	
+				</p>
+				<p>
+				  <strong>Can I cancel my pledge?</strong><br>
+				  Yep, you can cancel your pledge at any time. Just click the 'Manage Your Pledges' button then the 'Cancel Pledge' link.
+				</p>
+				<p>
+				  <strong>Is it possible to get a refund?</strong><br>
+				  Sure. We're happy to refund your last pledge payment within 7 days after the payment date. Send us an email to <a href="mailto:hello@patrons.us">hello@patrons.us</a> and we'll help you.		
+				</p>
+				<p>
+				  <strong>I'm an artist and am interested in setting up Patrons for my fans. Where can I find out more info about how it works?</strong><br>
+				  Awesome. Head to <%= link_to("http://patrons.us", "http://patrons.us", :target => '_blank') %>, for info about how to get set up and how Patrons works.	
+				</p>
+				
+				<p>
+				  <strong>My question wasn't answered. How can I contact you?</strong><br>
+				  No problem. Shoot an email to <a href="mailto:hello@patrons.us">hello@patrons.us</a>. We'll get back to you with an answer ASAP.		
+				</p>
+				
+            </div>
+            <div class="modal-footer">
+              <a href="#" class="btn secondary close">Close</a>
+            </div>
+          </div>		
+
+
+		  <div id="modal-about" class="modal hide fade">
+            <div class="modal-header">
+              <a href="#" class="close">&times;</a>
+              <h3>About Patrons</h3>
+            </div>
+            <div class="modal-body">
+              	<p>
+					<strong>Patrons is a super easy way for fans support the artists they love.<strong>
+				</p>
+				<p>
+					Fans do that by pledging a monthly donation to an artist. You can learn more about how Patrons works and our background on our website: <%= link_to("http://patrons.us", "http://patrons.us", :target => '_blank') %>
+				</p>
+				<p>
+				If you have questions or need help, shoot us an email: <a href="mailto:hello@patrons.us">hello@patrons.us</a>.	
+				</p>
+				<p>Cheers!</p>
+				<p>Team Patrons</p>
+				
+            </div>
+            <div class="modal-footer">
+              <a href="#" class="btn secondary close">Close</a>
+            </div>
+          </div>
+
+
+		
+		<p><a data-controls-modal="modal-faq" data-backdrop="true" data-keyboard="true">FAQ</a> &nbsp;| &nbsp;<a data-controls-modal="modal-about" data-backdrop="true" data-keyboard="true">About</a> &nbsp;| &nbsp;<a href="mailto:hello@patrons.us">Contact</a></p>
+		
+		</div>	
+	</div>
+
+</div>
+
+
+</body>
+</html>

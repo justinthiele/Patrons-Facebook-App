@@ -1,0 +1,64 @@
+<div id="manage_buttons">
+	<% if session[:signed_request]["page"]["id"] == @artist.fb_page_id %>
+	  <% if session[:signed_request]["page"]["admin"] == true %>
+		<% unless @artist.published == "true" %>	
+			<div class="not-published alert-message warning">Your app is not published. <%= link_to "Publish your app", :id => @artist.id, :action => :toggle_published, :remote => :true %> when you're ready.</div>
+		<% end %>
+		<div id="manage_tab_button">
+			<%= link_to "Manage App Settings", artist_profile_url(@artist), :class => "uiButton" %>
+		</div>
+	  <% end %>
+	<% end %>
+	
+    <% if @user %>
+      <div id="manage_pledges_button">
+	  	<%= link_to "Manage Your Pledges", user_profile_url(@user), :class => "uiButton" %>
+      </div>
+    <% end %>
+</div>
+
+<div id="artist_image">
+	<%= image_tag @artist.image_url(:lg_image) unless @artist.image_url(:lg_image).nil?%>
+</div>
+
+<h1><%= @artist.headline %></h1>
+
+<p>
+  <%= simple_format raw(@artist.description) %>
+</p>
+
+<h2>Pledge Levels</h2>
+
+<div class="row">
+<% b = 0 %>
+<% @active_plans.each do |plan| %>
+  <div class="span3">
+    <div class="pledge-name"><h3><%= plan.name %></h3></div>
+	<div class="pledge-badge"><%= image_tag("badge-#{b+=1}.png") %></div>
+	
+	<div class="pledge-price">
+		<h1>
+		<% p = number_to_currency plan.price %>
+			<% if p.scan(/..$/) == ["00"] %>
+				<sup>$</sup><%= plan.price.to_i %>
+			<% else %>
+				<sup>$</sup><%= "%.2f" % plan.price %>
+			<% end %>
+		<span class="p">/month</span>
+		</h1>
+	</div>
+	
+	<div class="pledge-description">
+  	  	<% if plan.description.present? %>
+			<p><%= simple_format raw(plan.description) %></p>
+		<% end %>
+	</div>
+	
+	<div class="pledge-button">
+      <%= fb_login_and_redirect("#{new_subscription_url(:plan_id => plan.id)}", :scope=>"publish_stream", :text => "Pledge", :v => '2') %>
+
+	</div>
+  </div>
+
+<% end %>
+</div>

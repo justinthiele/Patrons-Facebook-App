@@ -1,0 +1,49 @@
+<%= form_for @subscription, :html => {:class => "form-stacked", :id => "edit_subscription"} do |f| %>
+
+  <% if @subscription.errors.any? %>
+    <div id="error_explanation" class="alert-message block-message error">
+      <h2><%= pluralize(@subscription.errors.count, "error") %> prohibited your pledge from being saved:</h2>
+
+      <ul>
+      <% @subscription.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <%= f.hidden_field :stripe_card_token %>
+
+<!-- for stripe -->
+  <% if @subscription.stripe_card_token.present? %>
+    Credit card has been provided.
+  <% else %>
+
+  	  <div class="clearfix">
+	    <%= label_tag :card_number, "Credit Card Number" %>
+	    <%= text_field_tag :card_number, nil, name: nil %>
+	  </div>
+  	  <div class="clearfix">
+	    <%= label_tag :card_code, "Security Code on Card (CVV)" %>
+	    <%= text_field_tag :card_code, nil, name: nil, :class => "span2" %>
+	  </div>
+  	  <div class="clearfix">
+	    <%= label_tag :card_month, "Card Expiration" %>
+	    <%= select_month nil, {add_month_numbers: true}, {name: nil, id: "card_month"} %>
+	    <%= select_year nil, {start_year: Date.today.year, end_year: Date.today.year+15}, {name: nil, id: "card_year", :class => "span2"} %>
+	  </div>
+  <% end %>
+<!-- end stripe -->
+	
+
+  <!-- stripe errors -->
+  <div id="stripe_error">
+	<noscript>JavaScript is not enabled and is required for this form. First enable it in your web browser settings.</noscript>
+  </div>
+  <!-- end stripe errors -->
+
+  <div class="actions">
+    <%= f.submit "Update Card Info", :class => "uiButton uiButtonConfirm" %> &nbsp;<%= link_to 'Cancel', :back, :class => "uiButton" %>
+  </div>
+
+<% end %>

@@ -1,0 +1,315 @@
+<!-- START HEADER -->
+<div id="header">
+	<div id="header-logo">
+        <!-- LOGO -->        
+    	<!-- <img src="/images/patrons-logo.png" border="0" alt="Patrons Logo" /> -->
+    	<a data-controls-modal="modal-about" data-backdrop="true" data-keyboard="true" id="logo"><img src="/images/patrons-logo.png" border="0" alt="Patrons Logo" /></a>
+    </div>
+</div>
+<!-- END HEADER -->
+
+
+<% unless @artist.published == "true" %>	
+	<div class="not-published alert-message warning">Your app is not published. <strong><%= link_to "Publish your app", :id => @artist.id, :action => :toggle_published, :remote => :true %></strong> when you're ready.</div>
+<% end %>
+
+<p id="back_link"><%= link_to "« Back", artist_url(@artist) %></p>
+
+<h1>Manage Your App Settings</h1>
+
+<!-- tab navigation -->
+<ul class="tabs" data-tabs="tabs" >
+	<li class="active"><a href="#app-info">App Info</a></li>
+	<li><a href="#pledges">Pledges</a></li>
+	<li><a href="#payment">Payout Info</a></li>
+	<li><a href="#support">Support</a></li>
+</ul>
+<!-- end tab navigation -->
+
+
+
+<!-- begin Tab Info tab -->
+<div class="tab-content">
+  <div class="active" id="app-info">
+	<%= image_tag @artist.image_url(:lg_image) unless @artist.image_url(:lg_image).nil?%>
+	
+	<h1><%= @artist.headline %></h1>
+	
+	<p>
+	  <%= simple_format raw(@artist.description) %>
+	</p>
+	
+	<%= link_to "Edit Photo & Info", edit_artist_path(@artist), :class => "uiButton" %> 
+	
+	
+	<h2>Pledge Levels</h2>
+	
+	<p><span class="label success">Note :</span> Pledge Levels are monthly subscription plans for your supporters. You can create up to 3 different Pledge Levels. They are usually set at different price points. Most popular are $5/month, $10/month, and $25/month.</p>
+	
+	<% if @active_plans.count < 3 %>
+		<div id="new_plan_button">
+			<%= link_to "New Pledge Level", new_plan_path, :class => "uiButton uiButtonConfirm" %> 
+		</div>
+	<% end %>
+	
+	<% if @active_plans.present? %>
+		<div class="row">
+		  	<% b = 0 %>
+		  	<% @active_plans.each do |plan| %>
+		  	  <div class="span3">
+			    <div class="pledge-name"><h3><%= plan.name %></h3></div>
+				<div class="pledge-badge"><%= image_tag("badge-#{b+=1}.png") %></div>
+
+				<div class="pledge-price">
+					<h1>
+					<% p = number_to_currency plan.price %>
+						<% if p.scan(/..$/) == ["00"] %>
+							<sup>$</sup><%= plan.price.to_i %>
+						<% else %>
+							<sup>$</sup><%= "%.2f" % plan.price %>
+						<% end %>
+					<span class="p">/month</span>
+					</h1>
+				</div>
+		  		<div class="pledge-description">
+					<% if plan.description.present? %>
+						<p><%= simple_format raw(plan.description) %></p>
+					<% end %>
+				   	<%= link_to "Edit", edit_plan_path(plan) %> 
+				</div>
+			  </div>
+		  	<% end %>
+		</div>
+	<% end %>
+	
+	<% if @active_plans.count >= 3 %>	
+		<p>* If you'd like to add another Pledge Level, you'll first need to click 'Edit' and make one of your Pledge Levels inactive.</p>
+	<% end %>
+	
+	<% if @inactive_plans.present? %>
+	  <h2>Inactive Pledge Levels</h2>
+		<div class="row">
+		  	<% @inactive_plans.each do |plan| %>
+		  	  <div class="span3">
+			    <div class="pledge-name"><h3><%= plan.name %></h3></div>
+				<div class="pledge-badge"><%= image_tag("badge-inactive.png") %></div>
+
+				<div class="pledge-price">
+					<h1>
+					<% p = number_to_currency plan.price %>
+						<% if p.scan(/..$/) == ["00"] %>
+							<sup>$</sup><%= plan.price.to_i %>
+						<% else %>
+							<sup>$</sup><%= "%.2f" % plan.price %>
+						<% end %>
+					<span class="p">/month</span>
+					</h1>
+				</div>	
+		  		<div class="pledge-description">
+			  	  <%= content_tag(:p, plan.description) if plan.description.present? %> <%= link_to "Edit", edit_plan_path(plan) %> 
+				</div>
+			  </div>
+		  	<% end %>
+		</div>
+	<% end %>
+	
+  </div> 	
+<!-- end Tab Info tab -->
+
+
+
+
+<!-- begin Pledges tab -->
+  <div id="pledges">
+	
+	<% if @plans.blank? %>
+		<p>You haven't created any Pledge Levels yet.</p>
+	<% else %>
+		<% prelim_pledge_count = 0 %>
+		<% @plans.each do |plan| %>
+			<% prelim_pledge_count += plan.subscriptions.count %>
+		<% end %>
+		<% if prelim_pledge_count == 0 %>
+			<p>No fans have Pledged yet.</p>
+		<% else %>
+		
+	   	<div id="pledges-table-div">
+			<table id="pledges-table" class="condensed-table zebra-striped">
+				<thead>
+				  <tr>
+				    <th>Email</th>
+				    <th>Pledged On</th>
+				    <th>Pledge Level</th>
+				    <th>Monthly Pledge</th>
+				  </tr>
+				</thead>
+				
+				<tbody>
+				 <% artist_gross_revenue = 0 %>
+				 <% artist_net_revenue = 0 %>
+	  			 <% pledge_count = 0 %>
+				  <% @plans.each do |plan| %>
+				  <% plan.subscriptions.each do |subscription| %>
+				  	<tr>
+					    <td><%= subscription.user.email %></td>
+					    <td><%= subscription.created_at.strftime("%b %d, %Y") %></td>
+					    <td><%= subscription.plan.name %></td>
+					    <td><%= number_to_currency subscription.price %></td>
+					 </tr>
+					<% artist_gross_revenue += subscription.price %>
+					<% artist_net_revenue += ((subscription.price * (1 - TRANSACTION_FEE_PERCENT)) - TRANSACTION_FEE_FLAT) %>
+					<% pledge_count += 1 %>
+				  <% end %>
+				  <% end %>
+				</tbody>
+			</table>
+		</div>
+			
+		<div id="table_heading">
+			<h3><span id="total_pledges"><%= pledge_count %> Active Pledges</span> <span id="estimated">Estimated <%= number_to_currency (artist_net_revenue - (artist_gross_revenue * @artist.pledges_fee_percent)) %>/month*</span></h3>
+		</div>		
+		
+		<p>* The estimate above accounts for transaction fees but can't account for cancellations, refunds, or chargebacks that may occur.</p>
+		<% end %>
+	<% end %>
+  </div> 	
+<!-- end Pledges tab -->
+
+
+
+
+<!-- begin Payment Info tab -->
+  <div id="payment">
+
+	<p>All payouts are made via PayPal. We are looking at adding additional payout options in the future.</p>
+	
+	<p>Your payment will be sent within 7 days of the end of the month. If you're account balance is less than $50, you're balance will be carried over to the next month.</p>
+	<!-- <p>You can be paid by PayPal or mailed a check. PayPal is quicker but they'll charge you a 2.9% transaction fee.</p> -->
+	
+	<h2>Payout Info</h2>
+	
+	<%= form_for @artist, :html => {:class => "form-stacked"} do |f| %>
+	  <% if @artist.errors.any? %>
+	    <div id="error_explanation">
+	      <h2><%= pluralize(@artist.errors.count, "error") %> prohibited this artist from being saved:</h2>
+
+	      <ul>
+	      <% @artist.errors.full_messages.each do |msg| %>
+	        <li><%= msg %></li>
+	      <% end %>
+	      </ul>
+	    </div>
+	  <% end %>
+
+	  <!-- <div class="clearfix">	 -->
+		<!-- <label for="payment_method">How do you want to be paid?</label> -->
+	    <!-- % [ 'PayPal', 'Check' ].each do |payment| % -->
+			<!-- I had to take a bunch out of this next line -->
+	      <!-- <br><div id="%= payment %"><= f.radio_button :payment_method, payment >&nbsp; <= payment ></div> -->
+	    <!-- % end % -->
+	  <!-- </div> -->
+	
+	<!-- <div id="paypal_fields"> -->
+	  <div class="clearfix">
+	    <%= f.label :paypal_email, "PayPal Email Address" %>
+	    <%= f.email_field :paypal_email %>
+	  </div>
+	<!-- </div> -->
+	
+	<%= f.hidden_field :payment_method, :value => 'PayPal' %>
+  
+
+	<!-- <div id="check_fields"> -->
+	  <!-- <div class="clearfix"> -->
+	    <!-- %= f.label :payment_name, "Name" % -->
+	    <!-- %= f.text_field :payment_name % -->
+	  <!-- </div> -->
+
+	  <!-- <div class="clearfix"> -->
+	    <!-- %= f.label :address_line1, "Address (Line 1)" % -->
+	    <!-- %= f.text_field :address_line1 % -->
+	  <!-- </div> -->
+	
+	  <!-- <div class="clearfix"> -->
+	    <!-- %= f.label :address_line2, "Address (Line 2)" % -->
+	    <!-- %= f.text_field :address_line2 % -->
+	  <!-- </div> -->
+
+	  <!-- <div class="clearfix"> -->
+	    <!-- %= f.label :address_city, "City" % -->
+	    <!-- %= f.text_field :address_city, :class => "span2" % -->	
+	  <!-- </div> -->
+
+	  <!-- <div class="clearfix"> -->
+	    <!-- %= f.label :address_state, "State" % -->
+	    <!-- %= f.text_field :address_state, :class => "span2" % -->
+	  <!-- </div> -->
+	
+	  <!-- <div class="clearfix"> -->
+	    <!-- %= f.label :address_zip, "Postal Code (Zip Code)" % -->
+	    <!-- %= f.text_field :address_zip, :class => "span2" % -->
+	  <!-- </div> -->
+
+	  <!-- <div class="clearfix"> -->
+	    <!-- %= f.label :address_country, "Country" % -->
+	    <!-- %= f.text_field :address_country, :class => "span2" % -->
+	  <!-- </div> -->
+	<!-- </div> -->
+
+	  <div class="actions">
+	    <%= f.submit "Save Payout Info", :class => "uiButton uiButtonConfirm" %>
+	  </div>
+	<% end %>	
+	
+  </div> 
+<!-- end payment tab -->
+
+
+
+<!-- begin support tab -->
+  <div id="support">
+		<!-- <h3>Call Pledges Support</h3> -->
+			<!-- <object type="application/x-shockwave-flash" data="https://clients4.google.com/voice/embed/webCallButton" width="230" height="85"><param name="movie" value="https://clients4.google.com/voice/embed/webCallButton" /><param name="wmode" value="transparent" /><param name="FlashVars" value="id=334cbcf7fddfc792345fad20e629907718628a58&style=0" /></object> -->
+		
+		<h2>Contact Patrons Support</h2>
+				
+				<% form_tag send_support_path(@artist), :class => "form-stacked" do %>
+
+					<div class="clearfix">
+					  <%= label :email, :name, "Your Name" %>
+					  <%= text_field :email, :name %>
+					</div>
+
+					<div class="clearfix">
+					  <%= label :email, :address, "Email Address" %>
+					  <%= email_field :email, :address %>
+					</div>
+
+					<div class="clearfix">
+					  <%= label :email, :subject, "Subject" %>
+					  <%= text_field :email, :subject %>
+					</div>
+
+					<div class="clearfix">
+					  <%= label :email, :body, "Message" %>
+					  <%= text_area :email, :body, :rows => 8, :cols => 50 %>
+					</div>
+					
+					<%= hidden_field :email, :fb_page_id, :value => "#{@artist.fb_page_id}" %>					
+
+					<div class="actions">
+					  <%= submit_tag "Send Message", :class => "uiButton uiButtonConfirm" %>
+					</div>
+
+				<% end %>
+  </div> 
+<!-- end support tab -->
+
+
+</div>
+
+<script>
+  $(function () {
+	$('.tabs').tabs()
+  })
+</script>

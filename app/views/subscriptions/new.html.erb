@@ -1,0 +1,18 @@
+<!-- START HEADER -->
+<div id="header">
+	<div id="header-logo">
+        <!-- LOGO -->        
+    	<a data-controls-modal="modal-about" data-backdrop="true" data-keyboard="true" id="logo"><img src="/images/patrons-logo.png" border="0" alt="Patrons Logo" /></a>
+    </div>
+</div>
+<!-- END HEADER -->
+
+<h1>Your New Pledge To <%= @plan.artist.name %></h1>
+
+<p><strong>Pledge Level:</strong> <%= @subscription.plan.name %><br>
+<strong>Monthly Pledge:</strong> <%= number_to_currency @subscription.plan.price %></p>
+<p><span class="label success">Note :</span> Your monthly pledge will appear on your credit card statement as 'PATRONS.US'.<br>Other questions you might have are answered in the <a data-controls-modal="modal-faq" data-backdrop="true" data-keyboard="true">FAQ</a>.</p>
+
+<h2>Payment Info</h2>
+
+<%= render 'form' %>

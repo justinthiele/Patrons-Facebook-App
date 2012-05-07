@@ -1,0 +1,19 @@
+<!-- START HEADER -->
+<div id="header">
+	<div id="header-logo">
+        <!-- LOGO -->        
+    	<!-- <img src="/images/patrons-logo.png" border="0" alt="Patrons Logo" /> -->
+    	<a data-controls-modal="modal-about" data-backdrop="true" data-keyboard="true" id="logo"><img src="/images/patrons-logo.png" border="0" alt="Patrons Logo" /></a>
+    </div>
+</div>
+<!-- END HEADER -->
+
+<h1>Edit Profile</h1>
+
+<%= render 'form' %>
+
+<% if @artist.published == "true" %>
+	<div class="published">Your app is published. <%= link_to "Unpublish", :id => @artist.id, :action => :toggle_published, :remote => :true %></div>		
+<% else %>	
+	<div class="not-published">Your app is not published. <%= link_to "Publish", :id => @artist.id, :action => :toggle_published, :remote => :true %></div>
+<% end %>

@@ -1,0 +1,33 @@
+<h1>Your pledge to <%= @plan.artist.name %></h1>
+
+<p>
+  <b>Pledge Level:</b>
+  <!-- %= @subscription.subscription.plan.name % -->
+  <%= @plan.name %>
+
+</p>
+
+<p>
+  <b>Monthly Pledge:</b>
+  <%= number_to_currency @subscription.next_recurring_charge.amount / 100 %>
+</p>
+
+<p>
+  <b>Next Payment Date:</b>
+  <%= @subscription.next_recurring_charge.date.to_date.strftime("%B %d, %Y") %>
+</p>
+
+<p>
+  <b>Card On File:</b>
+  <%= @subscription.active_card.type %> XXXXXXXXXXXX<%= @subscription.active_card.last4 %>
+</p>
+
+<p>
+  <b>Email On File:</b>
+  <%= @subscription.description %>
+</p>
+
+<%= link_to 'Cancel Pledge', @local_subscription, :confirm => "Are you sure you want to cancel your pledge to #{@plan.artist.name}?", :method => :delete %>
+
+<!-- %= link_to 'Edit', edit_subscription_path(@subscription) % -->
+<%= link_to 'Back', :back %>

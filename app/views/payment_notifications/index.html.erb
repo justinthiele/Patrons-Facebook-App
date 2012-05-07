@@ -1,0 +1,31 @@
+<h1>Listing payment_notifications</h1>
+
+<table>
+  <tr>
+    <th>Plan</th>
+    <th>User</th>
+    <th>Status</th>
+    <th>Amount</th>
+    <th>Raw response</th>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @payment_notifications.each do |payment_notification| %>
+  <tr>
+    <td><%= payment_notification.plan_id %></td>
+    <td><%= payment_notification.user_id %></td>
+    <td><%= payment_notification.status %></td>
+    <td><%= payment_notification.amount %></td>
+    <td><%= payment_notification.raw_response %></td>
+    <td><%= link_to 'Show', payment_notification %></td>
+    <td><%= link_to 'Edit', edit_payment_notification_path(payment_notification) %></td>
+    <td><%= link_to 'Destroy', payment_notification, :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New Payment notification', new_payment_notification_path %>

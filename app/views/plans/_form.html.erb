@@ -1,0 +1,45 @@
+<%= form_for @plan, :html => {:class => "form-stacked"} do |f| %>
+
+  <% if @plan.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@plan.errors.count, "error") %> prohibited this pledge level from being saved:</h2>
+
+      <ul>
+      <% @plan.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="clearfix">
+	<div class="with-popover" data-content="Create a name for your Pledge Level. Examples: Gold Level, Silver, Supporter, Patron." rel="popover" data-original-title="Pledge Level Name">
+    <%= f.label :name, "Pledge Level Name" %>
+    <%= f.text_field :name %>
+	</div>
+  </div>
+
+  <div class="clearfix">
+	<div class="with-popover" data-content="Set a monthly pledge amount. The most popular are $5/month, $10/month, and $25/month." rel="popover" data-original-title="Amount Per Month">
+    <%= f.label :price, "Amount Per Month" %>
+	<div class="input-prepend">
+  	  <span class="add-on">$</span>
+      <%= f.text_field :price, :class => "span2" %>
+    </div>
+	</div>
+  </div>
+
+  <div class="clearfix">
+	<div class="with-popover" data-content="Describe why this pledge level is so great :)" rel="popover" data-original-title="Description">
+    <%= f.label :description, "Description (optional)" %>
+    <%= f.text_area :description %>
+	</div>
+  </div>
+
+  <%= f.hidden_field :active, :value => "Active" %>
+
+  <div class="actions">
+    <%= f.submit "Save Pledge Level", :class => "uiButton uiButtonConfirm" %> &nbsp;<%= link_to 'Cancel', :back, :class => "uiButton" %>
+  </div>
+
+<% end %>

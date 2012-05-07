@@ -1,0 +1,21 @@
+<html>
+<body>
+
+<h1>Nice, you're monthly pledge to <%= @artist.name %> has been sent!</h1>
+
+<p>
+	Here's your pledge details:<br>
+	<b>Pledge Level:</b> <%= @payment_notification.plan.name %><br>
+	<b>Monthly Pledge:</b> <%= number_to_currency @payment_notification.plan.price %><br>
+</p>
+
+<p>You can edit your pledge and manage your account from the Patrons app on <%= @artist.name %>'s Facebook Page. Just click the 'Manage Your Pledges' button.</p>
+
+<p>If you ever have questions or need help => hello@patron.us</p>
+
+<p>Cheers!</p>
+
+<p>Justin / <a href="http://patrons.us">Patrons</a></p>
+
+</body>
+</html>

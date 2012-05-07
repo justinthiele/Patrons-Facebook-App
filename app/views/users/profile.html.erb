@@ -1,0 +1,136 @@
+<!-- START HEADER -->
+<div id="header">
+	<div id="header-logo">
+        <!-- LOGO -->        
+    	<!-- <img src="/images/patrons-logo.png" border="0" alt="Patrons Logo" /> -->
+    	<a data-controls-modal="modal-about" data-backdrop="true" data-keyboard="true" id="logo"><img src="/images/patrons-logo.png" border="0" alt="Patrons Logo" /></a>
+    </div>
+</div>
+<!-- END HEADER -->
+
+<p id="back_link"><%= link_to "« Back", artist_url(session[:artist_id]) %></p>
+
+<h1>Manage Your Patrons Account</h1>
+
+<ul class="tabs" data-tabs="tabs" >
+	<li class="active"><a href="#pledges">Your Pledges</a></li>
+	<li><a href="#account_info">Account Info</a></li>
+	<!-- <li><a href="#notifications">Notifications</a></li> -->
+	<li><a href="#support">Support</a></li>
+</ul>
+
+<div class="tab-content">
+	
+<!-- begin pledges tab	 -->
+  <div class="active" id="pledges">
+	<% if @user.subscriptions.present? %>
+		<% @user.subscriptions.each do |subscription| %>
+			<div class="single_pledge">
+				<% stripe_subscription = Stripe::Customer.retrieve("#{subscription.stripe_customer_token}") %>
+	  			<h2><%= subscription.plan.artist.name %></h2>
+				<p>
+			  		<b>Pledge Level:</b>
+			  		<%= subscription.plan.name %>
+				</p>
+
+				<p>
+			  		<b>Monthly Pledge:</b>
+			  		<%= number_to_currency stripe_subscription.next_recurring_charge.amount / 100 %>
+				</p>
+
+				<p>
+			  		<b>Next Payment Date:</b>
+			  		<%= stripe_subscription.next_recurring_charge.date.to_date.strftime("%B %d, %Y") %>
+				</p>
+
+				<p>
+			  		<b>Card On File:</b>
+			  		<%= stripe_subscription.active_card.type %> XXXXXXXXXXXX<%= stripe_subscription.active_card.last4 %>
+				</p>
+
+				<%= link_to 'Update Credit Card', edit_subscription_path(subscription) %> &nbsp;| &nbsp;<%= link_to 'Cancel Pledge', subscription, :confirm => "Are you sure you want to cancel your pledge to #{subscription.plan.artist.name}?", :method => :delete %>
+			</div>
+	
+		<% end %>
+	<% end%>
+	
+  </div>
+<!-- end pledges tab -->
+
+
+<!-- begin account info tab -->
+  <div id="account_info">  	
+
+	<p>
+	  <b>Name:</b>
+	  <%= @user.name if @user.name.present?%>
+	</p>
+	
+	<p>
+	  <b>Email Address:</b>
+	  <%= @user.email %>
+	</p>
+
+	<p>
+	  <b>Facebook ID:</b>
+	  <%= @user.facebook_user_id %>
+	</p>
+
+	<%= link_to 'Update Account Info', edit_user_path(@user) %>
+  </div>
+<!-- end account info tab -->
+
+
+<!-- begin notifications tab -->
+  <!-- <div id="notifications">...</div> -->
+<!-- end notifications tab -->
+
+
+<!-- begin support tab -->
+  <div id="support">
+
+		<h2>Contact Patrons Support</h2>
+				
+				<% form_tag send_user_support_path(@user), :class => "form-stacked" do %>
+
+					<div class="clearfix">
+					  <%= label :email, :name, "Your Name" %>
+					  <%= text_field :email, :name %>
+					</div>
+
+					<div class="clearfix">
+					  <%= label :email, :address, "Email Address" %>
+					  <%= email_field :email, :address %>
+					</div>
+
+					<div class="clearfix">
+					  <%= label :email, :subject, "Subject" %>
+					  <%= text_field :email, :subject %>
+					</div>
+
+					<div class="clearfix">
+					  <%= label :email, :body, "Message" %>
+					  <%= text_area :email, :body, :rows => 8, :cols => 50 %>
+					</div>
+					
+					<%= hidden_field :email, :fb_user_id, :value => "#{@user.facebook_user_id}" %>					
+
+					<div class="actions">
+					  <%= submit_tag "Send Message", :class => "uiButton uiButtonConfirm" %>
+					</div>
+
+				<% end %>
+
+  </div> 
+<!-- end support tab -->
+
+
+</div>
+
+<script>
+  $(function () {
+	$('.tabs').tabs()
+  })
+</script>
+
+

@@ -1,0 +1,25 @@
+<html>
+<body>
+
+<h1>Congrats, you've got a new supporter!</h1>
+
+<p>
+<b>Supporter:</b> <%= @user.email %><br>
+<b>Pledge Level:</b> <%= @subscription.plan.name %><br>
+<b>Monthly Pledge:</b> <%= number_to_currency @subscription.price %><br>
+
+<% if @subscription.note.present? %>
+	<b>Message:</b> <%= @subscription.note %><br>
+<% end %>
+</p>
+
+<p>Remember, you can manage your account and view your supporters from the Patrons app on your Facebook Page. Just click the 'Manage App Settings' button.</p>
+
+<p>As always, if you have any feedback or just want to chat => hello@patrons.us</p>
+
+<p>Cheers!</p>
+
+<p>Justin / <a href="http://patrons.us">Patrons</a></p>
+
+</body>
+</html>

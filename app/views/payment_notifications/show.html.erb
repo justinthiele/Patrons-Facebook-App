@@ -1,0 +1,30 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <b>Plan:</b>
+  <%= @payment_notification.plan_id %>
+</p>
+
+<p>
+  <b>User:</b>
+  <%= @payment_notification.user_id %>
+</p>
+
+<p>
+  <b>Status:</b>
+  <%= @payment_notification.status %>
+</p>
+
+<p>
+  <b>Amount:</b>
+  <%= @payment_notification.amount %>
+</p>
+
+<p>
+  <b>Raw response:</b>
+  <%= @payment_notification.raw_response %>
+</p>
+
+
+<%= link_to 'Edit', edit_payment_notification_path(@payment_notification) %> |
+<%= link_to 'Back', payment_notifications_path %>

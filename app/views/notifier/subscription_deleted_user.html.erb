@@ -1,0 +1,25 @@
+<html>
+<body>
+
+<h1>Pledge Canceled</h1>
+
+<p>
+Your pledge to <%= @local_subscription.plan.artist.name %> has been cancelled.
+</p>
+
+<p>
+	Here's the details:<br>
+	<b>Pledge Level:</b> <%= @local_subscription.plan.name %><br>
+	<b>Monthly Pledge:</b> <%= number_to_currency @local_subscription.price %><br>
+	<b>Status:</b> Canceled<br>
+
+</p>
+
+<p>If you ever have questions or need help => hello@patrons.us</p>
+
+<p>Cheers,</p>
+
+<p>Justin / <a href="http://patrons.us">Patrons</a></p>
+
+</body>
+</html>

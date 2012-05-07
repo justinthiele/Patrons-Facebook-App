@@ -1,0 +1,25 @@
+<html>
+<body>
+
+<h1>Payment Disputed</h1>
+
+<p>
+<b>User Email:</b><br>
+<%= @payment_notification.user.email %><br>
+<b>User ID:</b><br>
+<%= @payment_notification.user_id %><br>
+</p>
+
+<p>
+<b>Artist Name:</b><br>
+<%= @payment_notification.plan.artist.name %><br>
+<b>Artist ID:</b><br>
+<%= @payment_notification.plan.artist_id %><br>
+</p>
+
+<p>
+<b>Full Details:</b><br>
+<%= @payment_notification %>
+</p>
+</body>
+</html>

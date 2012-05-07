@@ -1,0 +1,35 @@
+<h3>Price Per Month: <%= number_to_currency @plan.price %></h3>
+
+
+<%= form_for @plan, :html => {:class => "form-stacked"} do |f| %>
+
+  <% if @plan.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@plan.errors.count, "error") %> prohibited this pledge level from being saved:</h2>
+
+      <ul>
+      <% @plan.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="clearfix">
+    <%= f.label :description %>
+    <%= f.text_area :description %>
+  </div>
+
+  <div class="clearfix">	
+	<label for="active">Active or Inactive?</label>
+    <% [ 'Active', 'Inactive' ].each do |active| %>
+      <br><%= f.radio_button :active, active %>&nbsp; <%= active.humanize %>
+    <% end %>
+  </div>
+
+
+  <div class="actions">
+    <%= f.submit "Save Pledge Level", :class => "uiButton uiButtonConfirm" %> &nbsp;<%= link_to 'Cancel', :back, :class => "uiButton" %>
+  </div>
+
+<% end %>

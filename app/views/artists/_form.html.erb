@@ -1,0 +1,63 @@
+<%= form_for @artist, :html => {:multipart => true, :class => "form-stacked"} do |f| %>
+  <% if @artist.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@artist.errors.count, "error") %> prohibited your profile from being saved:</h2>
+
+      <ul>
+      <% @artist.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+
+
+  <div class="clearfix">
+	<div class="with-popover" data-content="This could be your name, your band's name, etc." rel="popover" data-original-title="Artist Name">
+    <%= f.label :name, "Artist Name" %>
+    <%= f.text_field :name %>
+	</div>
+  </div>
+
+  <div class="clearfix">
+	<div class="with-popover" data-content="The primary person in charge of the account. (This won't be published)" rel="popover" data-original-title="Contact Person">
+    <%= f.label :contact_person, "Contact Person" %>
+    <%= f.text_field :contact_person %>
+	</div>
+  </div>
+
+  <div class="clearfix">
+	<div class="with-popover" data-content="The main email address for our communications. (This won't be published)" rel="popover" data-original-title="Contact Person's Email">
+  	<%= f.label :email, "Contact Person's Email" %>
+  	<%= f.email_field :email %>
+	</div>
+  </div>
+
+  <div class="clearfix">
+	<div class="with-popover" data-content="This image will appear on your Patrons app. Horizontal images are best. It'll be scaled to 520px wide." rel="popover" data-original-title="Main Image">	
+  	<%= f.label :image, "Main Image (at least 520px wide)" %>
+  	<%= f.file_field :image %>
+	</div>
+  </div>
+
+  <div class="clearfix">
+	<div class="with-popover" data-content="Headline for your Patrons app. For example: 'Become A Patron!', 'Help Support ####'." rel="popover" data-original-title="App Headline">
+    <%= f.label :headline, "App Headline" %>
+    <%= f.text_field :headline %>
+	</div>
+  </div>
+
+  <div class="clearfix">
+	<div class="with-popover" data-content="Here's your chance to tell your fans about Patrons, why you want them to pledge, what their pledges will be used for, etc." rel="popover" data-original-title="Message To Fans">
+    <%= f.label :description, "Message To Fans" %>
+    <%= f.text_area :description %>
+	</div>
+  </div>
+
+  <%= f.hidden_field :fb_page_id, :value => "#{session[:signed_request]["page"]["id"]}" %>
+
+  <div class="actions">
+    <%= f.submit "Save Profile", :class => "uiButton uiButtonConfirm" %> &nbsp;<%= link_to 'Cancel', :back, :class => "uiButton" %>
+  </div>
+<% end %>

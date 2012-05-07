@@ -1,0 +1,34 @@
+<%= form_for @user, :html => {:class => "form-stacked"} do |f| %>
+
+  <% if @user.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@user.errors.count, "error") %> prohibited your profile from being saved:</h2>
+
+      <ul>
+      <% @user.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="clearfix">
+    <%= f.label :name %>
+    <%= f.text_field :name %>
+  </div>
+
+  <div class="clearfix">
+    <%= f.label :address %>
+    <%= f.text_field :address %>
+  </div>
+
+  <div class="clearfix">
+    <%= f.label :email %>
+    <%= f.text_field :email %>
+  </div>
+
+  <div class="actions">
+    <%= f.submit "Save", :class => "uiButton uiButtonConfirm" %> &nbsp;<%= link_to 'Cancel', user_profile_url(@user), :class => "uiButton" %>
+  </div>
+
+<% end %>

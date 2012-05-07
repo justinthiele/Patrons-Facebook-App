@@ -1,0 +1,17 @@
+development:
+  app_id: 
+  secret: 
+  api_key: 
+  callback_url: 
+
+production:
+  app_id: 
+  secret: 
+  api_key: 
+  callback_url: 
+
+staging:
+  app_id: 
+  secret: 
+  api_key: 
+  callback_url: 
